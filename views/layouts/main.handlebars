@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>YouTubeScraper</title>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper z-depth-3 white">
+            <a href="#" data-target="slide-out" class="sidenav-trigger left brand-logo black-text show-on-large"><i
+                    class="material-icons">reorder</i><i class="material-icons">play_arrow</i>Definitely Not
+                YoutTube</a>
+        </div>
+    </nav>
+    <ul id="slide-out" class="sidenav">
+        <li>
+            <a href="#create-playlist-modal" class="black-text create-playlist modal-trigger">Create Playlist</a>
+            <a href="#playlist-modal" class="black-text playlist modal-trigger">Playlists</a>
+        </li>
+    </ul>
+    <div id="create-playlist-modal" class="modal">
+        <div class="modal-content">
+            <h4>Create a New Playlist</h4>
+            <div class="input-field ">
+                <input value="" id="playlist-name" type="text" class="validate">
+                <label for="playlist-name">New Playlist Name</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" id="submit-new-playlist" class="modal-close waves-effect waves-green btn-flat">Submit</a>
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+    </div>
+    <div id="playlist-modal" class="modal">
+        <div class="modal-content">
+            <h4>Playlist List</h4>
+            <ul class="playlist-list">
+                {{#each playlists}}
+                <li><a href="/playlist/{{this._id}}">{{this.name}}</a></li>
+                {{/each}}
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+    </div>
+    <div class="container-fluid">
+        {{{body}}}
+    </div>
+</body>
+
+</html>
