@@ -54,7 +54,7 @@ app.get("/scrape", function(req, res) {
   axios.get("https://www.youtube.com").then(function(response) {
     // Load the Response into cheerio and save it to a variable
     var $ = cheerio.load(response.data);
-
+ 
     // An empty array to save the data that we'll scrape
     $("h3").each(function(i, element) {
       var video = {};
