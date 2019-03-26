@@ -15,7 +15,7 @@ var app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Make public a static folder
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public"));
 
 //Specifiy default engine as handlebars
 app.set("view engine", "handlebars");
@@ -32,31 +32,8 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scraperdb";
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
-// build database data from scraped youtube data
-axios.get("https://www.youtube.com").then(function(response) {
-  // Load the Response into cheerio and save it to a variable
-  var $ = cheerio.load(response.data);
-
-  // An empty array to save the data that we'll scrape
-  $("h3").each(function(i, element) {
-    var video = {};
-    video.title = $(this).text();
-    video.url = $(this)
-      .children("a")
-      .attr("href");
-    if (video.url !== undefined) {
-      video.youtubeID = video.url.slice(9, video.url.length);
-      // Create a new video in the database
-      db.Video.create(video).catch(function(err) {
-        console.log(err);
-      });
-    }
-  });
-});
-
 // Routes
 app.get("/", function(req, res) {
-  // load all new videos and playlist videos
   db.Video.find({})
     .then(function(video) {
       db.Playlist.find({})
@@ -72,8 +49,42 @@ app.get("/", function(req, res) {
     });
 });
 
+app.get("/scrape", function(req, res) {
+  // build database data from scraped youtube data
+  axios.get("https://www.youtube.com").then(function(response) {
+    // Load the Response into cheerio and save it to a variable
+    var $ = cheerio.load(response.data);
+
+    // An empty array to save the data that we'll scrape
+    $("h3").each(function(i, element) {
+      var video = {};
+      video.title = $(this).text();
+      video.url = $(this)
+        .children("a")
+        .attr("href");
+      if (video.url !== undefined) {
+        video.youtubeID = video.url.slice(9, video.url.length);
+        // Create a new video in the database
+        db.Video.create(video).catch(function(err) {
+          console.log(err);
+        });
+      }
+    });
+  });
+});
+
+app.get("/playlist/:id", function(req, res) {
+  db.Playlist.findOne({ _id: req.params.id })
+    .then(function(playlist) {
+      var video = playlist.list;
+      res.render("playlist", { video, playlist });
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+});
+
 app.post("/playlist", function(req, res) {
-  console.log(req.body);
   db.Playlist.create(req.body)
     .then(function() {
       res.redirect("/");
@@ -84,18 +95,46 @@ app.post("/playlist", function(req, res) {
 });
 
 app.post("/playlist/:id", function(req, res) {
-  db.Playlist.findOneAndUpdate(
-    { _id: req.params.id },
-    { $push: { list: req.body.videoId } }
-  )
-    .then(function() {
-      console.log(list);
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
+  db.Video.findOne({ _id: req.body.videoId }).then(function(loadedVideo) {
+    loadedVideo.playlistId = req.params.id;
+    db.Playlist.findOneAndUpdate(
+      { _id: req.params.id },
+      { $push: { list: loadedVideo } },
+      { new: false }
+    )
+      .then(function() {})
+      .catch(function(err) {
+        console.log(err);
+      });
+  });
 });
 
+app.post("/remove_from_playlist/:id", function(req, res) {
+  db.Video.findOne({ _id: req.body.videoId }).then(function(loadedVideo) {
+    loadedVideo.playlistId = req.params.id;
+    db.Playlist.findOneAndUpdate(
+      { _id: req.params.id },
+      { $pull: { list: loadedVideo } },
+      { new: false }
+    )
+      .then(function() {})
+      .catch(function(err) {
+        console.log(err);
+      });
+  });
+});
+
+app.delete("/delete_playlist/:id", function(req, res) {
+  db.Playlist.findOneAndDelete({ _id: req.params.id })
+    .then(function() {})
+    .catch(function(err) {});
+});
+
+app.delete("/cleardb", function(req, res) {
+  db.Video.remove({})
+    .then(function() {})
+    .catch(function(err) {});
+});
 // Start the server
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!" + " http://localhost:3000/");

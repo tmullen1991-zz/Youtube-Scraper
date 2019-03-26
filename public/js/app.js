@@ -3,6 +3,15 @@ $(document).ready(function() {
   $(".modal").modal();
   M.updateTextFields();
 
+  $(".scrape").on("click", function() {
+    $.ajax({
+      method: "GET",
+      url: "/scrape"
+    }).then(function(data) {
+      console.log(data);
+    });
+  });
+
   $("#submit-new-playlist").on("click", function() {
     var newPlaylist = $("#playlist-name")
       .val()
@@ -30,7 +39,35 @@ $(document).ready(function() {
           videoId: videoId
         }
       }).then(function(data) {
+        console.log(data);
       });
     });
+  });
+
+  $(".remove-from-playlist").on("click", function() {
+    var videoId = $(this).attr("value");
+    var playlistId = $(this).attr("value2");
+    $.ajax({
+      method: "POST",
+      url: "/remove_from_playlist/" + playlistId,
+      data: {
+        videoId: videoId
+      }
+    }).then(function(data) {
+      console.log(data);
+    });
+  });
+
+  $(".delete-playlist").on("click", function() {
+    $.ajax({
+      method: "DELETE",
+      url: "/delete_playlist/" + $(this).attr("value")
+    }).then(function(data) {});
+  });
+  $(".cleardb").on("click", function() {
+    $.ajax({
+      method: "DELETE",
+      url: "/cleardb"
+    }).then(function(data) {});
   });
 });

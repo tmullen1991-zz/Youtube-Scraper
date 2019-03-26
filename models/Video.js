@@ -17,6 +17,9 @@ var VideoSchema = new Schema({
     type: String,
     required: true
   },
+  playlistId:{
+    
+  },
   video: {
     type: Schema.Types.ObjectId,
     ref: "Video"

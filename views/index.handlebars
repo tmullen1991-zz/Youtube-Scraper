@@ -11,7 +11,7 @@
             <div class="card-action">
                 <a href="https://www.youtube.com{{this.url}}" class="blue-text">Link to Video</a>
                 <a href="#playlist-addsong-modal" value="{{this._id}}"
-                    class="black-text playlist modal-trigger add-playlist">Playlists</a>
+                    class="blue-text playlist modal-trigger add-playlist">Add to a Playlist</a>
             </div>
         </div>
     </div>
@@ -21,7 +21,7 @@
             <h4>Playlist List</h4>
             <ul class="playlist-list">
                 {{#each playlists}}
-                <li><a href="/playlist/{{this._id}}" value="{{this._id}}" class="playlist">{{this.name}}</a></li>
+                <li><a href="/" value="{{this._id}}" class="playlist">{{this.name}}</a></li>
                 {{/each}}
             </ul>
         </div>

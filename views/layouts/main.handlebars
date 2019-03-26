@@ -14,48 +14,110 @@
 </head>
 
 <body>
+
     <nav>
         <div class="nav-wrapper z-depth-3 white">
-            <a href="#" data-target="slide-out" class="sidenav-trigger left brand-logo black-text show-on-large"><i
-                    class="material-icons">reorder</i><i class="material-icons">play_arrow</i>Definitely Not
-                YoutTube</a>
+            <a href="#" data-target="mobile" class="sidenav-trigger black-text"><i class="material-icons">menu</i></a>
+            <ul class="left">
+
+                <li><a href="/" class="brand-logo black-text show-on-large"><i class="material-icons">play_arrow</i>
+                        YoutTube Scraper</a></li>
+            </ul>
+            <ul class="right hide-on-med-and-down">
+                <li>
+                    <a href="/" class="black-text scrape modal-trigger">Scrape Youtube!</a>
+                </li>
+                <li>
+                    <a href="#cleardb-modal" class="black-text modal-trigger">Clear Database</a>
+                </li>
+                <li>
+                    {{#if playlist}}
+                    <a href="#delete-playlist-modal" value="{{playlist.id}}"
+                        class="delete-playlist black-text modal-trigger">
+                        Delete Playlist</a>
+                    {{/if}}
+                </li>
+                <li>
+                    <a href="#create-playlist-modal" class="black-text create-playlist modal-trigger">Create
+                        Playlist</a>
+                </li>
+                <li>
+                    <a href="#playlist-modal" class="black-text playlist modal-trigger">Playlists</a>
+                </li>
+            </ul>
         </div>
     </nav>
-    <ul id="slide-out" class="sidenav">
+    <ul id="mobile" class="sidenav">
+        <li>
+            <a href="/" class="black-text scrape modal-trigger">Scrape Youtube!</a>
+        </li>
+        <li>
+            <a href="#cleardb-modal" class="black-text modal-trigger">Clear Database</a>
+        </li>
+        <li>
+            {{#if playlist}}
+            <a href="#delete-playlist-modal" value="{{playlist.id}}" class="delete-playlist black-text modal-trigger">
+                Delete Playlist</a>
+            {{/if}}
+        </li>
         <li>
             <a href="#create-playlist-modal" class="black-text create-playlist modal-trigger">Create Playlist</a>
+        </li>
+        <li>
             <a href="#playlist-modal" class="black-text playlist modal-trigger">Playlists</a>
         </li>
     </ul>
-    <div id="create-playlist-modal" class="modal">
-        <div class="modal-content">
-            <h4>Create a New Playlist</h4>
-            <div class="input-field ">
-                <input value="" id="playlist-name" type="text" class="validate">
-                <label for="playlist-name">New Playlist Name</label>
+    <div class="modals-here">
+        <div id="create-playlist-modal" class="modal">
+            <div class="modal-content">
+                <h4>Create a New Playlist</h4>
+                <div class="input-field ">
+                    <input value="" id="playlist-name" type="text" class="validate">
+                    <label for="playlist-name">New Playlist Name</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="/" id="submit-new-playlist" class="modal-close waves-effect waves-green btn-flat">Submit</a>
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
             </div>
         </div>
-        <div class="modal-footer">
-            <a href="#!" id="submit-new-playlist" class="modal-close waves-effect waves-green btn-flat">Submit</a>
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+        <div id="playlist-modal" class="modal">
+            <div class="modal-content">
+                <h4>Playlist List</h4>
+                <ul class="playlist-list">
+                    {{#each playlists}}
+                    <li><a href="/playlist/{{this._id}}">{{this.name}}</a></li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+            </div>
         </div>
-    </div>
-    <div id="playlist-modal" class="modal">
-        <div class="modal-content">
-            <h4>Playlist List</h4>
-            <ul class="playlist-list">
-                {{#each playlists}}
-                <li><a href="/playlist/{{this._id}}">{{this.name}}</a></li>
-                {{/each}}
-            </ul>
+        <div id="delete-playlist-modal" class="modal">
+            <div class="modal-content">
+                <h4>Are you sure you want to delete this playlist?</h4>
+            </div>
+            <div class="modal-footer">
+                <a href="/" class="cleardb waves-effect waves-green btn-flat">Yes</a>
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+            </div>
         </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+        <div id="cleardb-modal" class="modal">
+            <div class="modal-content">
+                <h4>Are you sure you want to clear the databases video list?</h4>
+            </div>
+            <div class="modal-footer">
+                <a href="/" class="cleardb waves-effect waves-green btn-flat">Yes</a>
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+            </div>
         </div>
     </div>
     <div class="container-fluid">
+
         {{{body}}}
     </div>
+
 </body>
 
 </html>
